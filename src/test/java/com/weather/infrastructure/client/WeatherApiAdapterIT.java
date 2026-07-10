@@ -52,7 +52,7 @@ class WeatherApiAdapterIT {
 	void shouldSearchCityByCountry() {
 	
 	    Uni<GeoLocation> result =
-	            weatherApiAdapter.searchCity("Monterrey", "MX");
+	            weatherApiAdapter.searchCityWithCountry("Monterrey", "MX");
 	
 	    GeoLocation location =
 	            result.await().indefinitely();

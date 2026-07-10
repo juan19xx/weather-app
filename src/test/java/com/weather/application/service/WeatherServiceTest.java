@@ -76,15 +76,15 @@ class WeatherServiceTest {
         Uni<GeoLocation> expected =
                 Uni.createFrom().item(city);
 
-        when(api.searchCity("Monterrey", "MX"))
+        when(api.searchCityWithCountry("Monterrey", "MX"))
                 .thenReturn(expected);
 
         Uni<GeoLocation> result =
-                service.searchCity("Monterrey", "MX");
+                service.searchCityWithCountry("Monterrey", "MX");
 
         assertSame(expected, result);
 
-        verify(api).searchCity("Monterrey", "MX");
+        verify(api).searchCityWithCountry("Monterrey", "MX");
     }
 
 }

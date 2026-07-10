@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.weather.application.ports.in.GetWeatherUseCase;
 import com.weather.application.ports.in.SearchCityUseCase;
+import com.weather.application.ports.in.SearchCityWithCountryUseCase;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 
@@ -22,6 +23,9 @@ public class WeatherResource {
 	@Inject
 	SearchCityUseCase searchCityUseCase;
 	
+	@Inject
+	SearchCityWithCountryUseCase searchCityWithCountryUseCase;
+	
 	@GET
 	@Path("/{query}")
 	public Uni<Weather> getWeather(@PathParam("query") String query) {
@@ -30,8 +34,8 @@ public class WeatherResource {
 	
 	@GET
 	@Path("/geolocation/{query}/{country}")
-	public Uni<GeoLocation> searchCity(@PathParam("query") String query, @PathParam("country") String country) {
-	    return searchCityUseCase.searchCity(query, country);
+	public Uni<GeoLocation> searchCityWithCountry(@PathParam("query") String query, @PathParam("country") String country) {
+	    return searchCityWithCountryUseCase.searchCityWithCountry(query, country);
 	}
 	
 	@GET

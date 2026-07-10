@@ -49,7 +49,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 	}
 
 	@Override
-	public Uni<GeoLocation> searchCity(String query, String country) {
+	public Uni<GeoLocation> searchCityWithCountry(String query, String country) {
 		// TODO Auto-generated method stub
 		Uni<List<GeoLocation>> cities = searchCity(query);
 		return cities.map(locations -> locations.stream()

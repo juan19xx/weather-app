@@ -10,5 +10,5 @@ import io.smallrye.mutiny.Uni;
 public interface WeatherApiPort {
 	Uni<Weather> getWeather(String query);
 	Uni<List<GeoLocation>> searchCity(String query);
-	Uni<GeoLocation> searchCity(String query, String country);
+	Uni<GeoLocation> searchCityWithCountry(String query, String country);
 }
