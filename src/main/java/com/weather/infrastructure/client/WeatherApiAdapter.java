@@ -49,4 +49,14 @@ public class WeatherApiAdapter implements WeatherApiPort{
 	    return geoLocationMapper.toDomain(response);
 	}
 
+	@Override
+	public GeoLocation searchCity(String query, String country) {
+		// TODO Auto-generated method stub
+		List<GeoLocation> cities = searchCity(query);
+		return cities.stream()
+		        .filter(g -> g.getCountry().equals(country))
+		        .findFirst()
+		        .orElse(null);
+	}
+
 }

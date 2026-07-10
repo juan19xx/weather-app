@@ -35,4 +35,11 @@ public class WeatherService implements GetWeatherUseCase, SearchCityUseCase{
 		return api.searchCity(query);
 	}
 
+
+	@Override
+	public GeoLocation searchCity(String query, String country) {
+		// TODO Auto-generated method stub
+		return api.searchCity(query, country);
+	}
+
 }

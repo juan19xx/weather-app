@@ -31,8 +31,16 @@ public class WeatherResource {
 	}
 	
 	@GET
+	@Path("/geolocation/{query}/{country}")
+	public GeoLocation searchCity(@PathParam("query") String query, @PathParam("country") String country) {
+	    return searchCityUseCase.searchCity(query, country);
+	}
+	
+	@GET
 	@Path("/geolocation/{query}")
 	public List<GeoLocation> searchCity(@PathParam("query") String query) {
 	    return searchCityUseCase.searchCity(query);
 	}
+	
+	
 }

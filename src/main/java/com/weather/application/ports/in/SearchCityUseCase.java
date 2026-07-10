@@ -6,4 +6,5 @@ import com.weather.domain.model.GeoLocation;
 
 public interface SearchCityUseCase {
 	List<GeoLocation> searchCity(String query);
+	GeoLocation searchCity(String query, String country);
 }

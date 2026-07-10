@@ -8,4 +8,5 @@ import com.weather.domain.model.Weather;
 public interface WeatherApiPort {
 	Weather getWeather(String query);
 	List<GeoLocation> searchCity(String query);
+	GeoLocation searchCity(String query, String country);
 }
