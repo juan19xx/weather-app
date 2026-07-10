@@ -16,6 +16,8 @@
         <quarkus.platform.version>3.33.2.SP1-redhat-00001</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <lombok.version>1.18.38</lombok.version>
     </properties>
 
     <repositories>
@@ -86,7 +88,18 @@
 		    <groupId>org.projectlombok</groupId>
 		    <artifactId>lombok</artifactId>
 		    <scope>provided</scope>
-		    <version>1.18.38</version>
+		    <version>${lombok.version}</version>
+		</dependency>
+		<dependency>
+	        <groupId>org.mapstruct</groupId>
+	        <artifactId>mapstruct</artifactId>
+	        <version>${org.mapstruct.version}</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.mapstruct</groupId>
+		    <artifactId>mapstruct-processor</artifactId>
+		    <version>${org.mapstruct.version}</version>
+		    <scope>provided</scope>
 		</dependency>
     </dependencies>
 
