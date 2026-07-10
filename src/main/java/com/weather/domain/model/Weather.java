@@ -1,9 +1,11 @@
 package com.weather.domain.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
 @Data
+@Builder
 public class Weather {
 	private String base;
 	private int visibility;
