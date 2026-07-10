@@ -1,0 +1,9 @@
+# URL base del cliente REST openweather
+quarkus:
+  rest-client:
+    openweather:
+      url: https://api.openweathermap.org
+
+openweather:
+  api:
+    key: YOUR_KEY
