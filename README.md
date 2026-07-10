@@ -1,67 +1,144 @@
-# weather-app
+# Weather App
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+API REST desarrollada con **Quarkus** siguiendo los principios de **Arquitectura Hexagonal (Ports & Adapters)**.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+La aplicación consume la API de **OpenWeather** para consultar información del clima y realizar búsquedas de ciudades.
 
-## Running the application in dev mode
+## Tecnologías
 
-You can run your application in dev mode that enables live coding using:
+- Java 21
+- Quarkus 3
+- Maven
+- Mutiny (Programación Reactiva)
+- MicroProfile REST Client
+- Jackson
+- JUnit 5
+- Mockito
+- Lombok
+- MapStruct
 
-```shell script
-./mvnw quarkus:dev
+## Arquitectura
+
+El proyecto está organizado siguiendo Arquitectura Hexagonal.
+
+```
+src/main/java/com/weather
+├── application
+│   ├── ports
+│   │   ├── in
+│   │   └── out
+│   └── service
+├── domain
+│   └── model
+└── infrastructure
+    ├── client
+    ├── dto
+    ├── mapper
+    ├── resource
+    └── rest
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+### Capas
 
-## Packaging and running the application
+**Domain**
 
-The application can be packaged using:
+Contiene el modelo de negocio y no depende de ninguna tecnología.
 
-```shell script
-./mvnw package
+**Application**
+
+Contiene los casos de uso y los puertos de entrada y salida.
+
+**Infrastructure**
+
+Implementa los adaptadores necesarios para exponer la API REST y consumir OpenWeather mediante MicroProfile REST Client.
+
+## Funcionalidades
+
+Actualmente la aplicación permite:
+
+- Consultar el clima actual por ciudad.
+- Buscar ciudades.
+- Buscar una ciudad filtrando por país.
+
+## API
+
+### Obtener clima
+
+```
+GET /weather?q=Monterrey
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+### Buscar ciudades
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+```
+GET /weather/search?q=Monterrey
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### Buscar ciudad por país
 
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
+```
+GET /weather/search?q=Monterrey&country=MX
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+## Configuración
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+Crear un archivo `.env` en la raíz del proyecto.
+
+```
+OPENWEATHER_API_KEY=TU_API_KEY
 ```
 
-You can then execute your native executable with: `./target/weather-app-1.0.0-SNAPSHOT-runner`
+El `application.yaml` utiliza dicha variable:
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+```yaml
+openweather:
+  api:
+    key: ${OPENWEATHER_API_KEY}
+```
 
-## Related Guides
+También es necesario configurar la URL base del cliente REST.
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
+```yaml
+quarkus:
+  rest-client:
+    openweather:
+      url: https://api.openweathermap.org
+```
 
-## Provided Code
+## Ejecutar la aplicación
 
-### REST
+Modo desarrollo:
 
-Easily start your REST Web Services
+```bash
+mvn quarkus:dev
+```
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+La aplicación estará disponible en:
+
+```
+http://localhost:8080
+```
+
+## Ejecutar pruebas
+
+Pruebas unitarias:
+
+```bash
+mvn test
+```
+
+Pruebas de integración:
+
+```bash
+mvn verify -DskipITs=false
+```
+
+## Compilar
+
+```bash
+mvn clean package
+```
+
+## Autor
+
+Juan Coronado
