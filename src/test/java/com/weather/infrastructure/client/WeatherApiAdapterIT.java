@@ -13,6 +13,7 @@ import com.weather.domain.model.Weather;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import jakarta.inject.Inject;
 
 @QuarkusTest
@@ -23,10 +24,15 @@ class WeatherApiAdapterIT {
 	@Test
 	void shouldGetWeatherFromOpenWeatherApi() {
 	
-	    Uni<Weather> result = weatherApiAdapter.getWeather("Monterrey");
-	
-	    Weather weather = result.await().indefinitely();
-	
+		UniAssertSubscriber<Weather> subscriber =
+	            weatherApiAdapter.getWeather("Monterrey")
+	                    .subscribe()
+	                    .withSubscriber(UniAssertSubscriber.create());
+
+	    subscriber.awaitItem();
+
+	    Weather weather = subscriber.getItem();
+
 	    assertNotNull(weather);
 	    assertEquals("Monterrey", weather.getName());
 	}
@@ -34,29 +40,34 @@ class WeatherApiAdapterIT {
 	
 	@Test
 	void shouldSearchCities() {
-	
-	    Uni<List<GeoLocation>> result =
-	            weatherApiAdapter.searchCity("Monterrey");
-	
-	    List<GeoLocation> cities =
-	            result.await().indefinitely();
-	
+
+	    UniAssertSubscriber<List<GeoLocation>> subscriber =
+	            weatherApiAdapter.searchCity("Monterrey")
+	                    .subscribe()
+	                    .withSubscriber(UniAssertSubscriber.create());
+
+	    subscriber.awaitItem().assertCompleted();
+
+	    List<GeoLocation> cities = subscriber.getItem();
+
 	    assertNotNull(cities);
 	    assertFalse(cities.isEmpty());
-	
-	    assertEquals("MX", cities.get(0).getCountry());
+	    assertEquals("MX", cities.getFirst().getCountry());
 	}
 	
 	
 	@Test
 	void shouldSearchCityByCountry() {
-	
-	    Uni<GeoLocation> result =
-	            weatherApiAdapter.searchCityWithCountry("Monterrey", "MX");
-	
-	    GeoLocation location =
-	            result.await().indefinitely();
-	
+
+	    UniAssertSubscriber<GeoLocation> subscriber =
+	            weatherApiAdapter.searchCityWithCountry("Monterrey", "MX")
+	                    .subscribe()
+	                    .withSubscriber(UniAssertSubscriber.create());
+
+	    subscriber.awaitItem().assertCompleted();
+
+	    GeoLocation location = subscriber.getItem();
+
 	    assertNotNull(location);
 	    assertEquals("MX", location.getCountry());
 	}

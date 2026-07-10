@@ -20,19 +20,24 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class WeatherApiAdapter implements WeatherApiPort{
+	private final WeatherRestClient client;
+    private final WeatherMapper weatherMapper;
+    private final GeoLocationMapper geoLocationMapper;
+    private final String apiKey;
+    private static final int MAX_NUMBER_OF_GEOLOCATION_API_RESULTS = 5;
 
-	@Inject
-	@RestClient
-	WeatherRestClient client;
-	
-	@Inject
-	WeatherMapper weatherMapper;
-	
-	@Inject
-	GeoLocationMapper geoLocationMapper;
-	
-	@ConfigProperty(name = "openweather.api.key")
-	String apiKey;
+    @Inject
+    public WeatherApiAdapter(
+            @RestClient WeatherRestClient client,
+            WeatherMapper weatherMapper,
+            GeoLocationMapper geoLocationMapper,
+            @ConfigProperty(name = "openweather.api.key") String apiKey) {
+
+        this.client = client;
+        this.weatherMapper = weatherMapper;
+        this.geoLocationMapper = geoLocationMapper;
+        this.apiKey = apiKey;
+    }
 	
 	@Override
 	public Uni<Weather> getWeather(String query) {
@@ -44,7 +49,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 	@Override
 	public Uni<List<GeoLocation>> searchCity(String query) {
 		// TODO Auto-generated method stub
-		return client.searchCity(query, 5, apiKey)
+		return client.searchCity(query, MAX_NUMBER_OF_GEOLOCATION_API_RESULTS, apiKey)
 				.map(geoLocationMapper::toDomain);
 	}
 
@@ -55,7 +60,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 		return cities.map(locations -> locations.stream()
                 .filter(g -> country.equals(g.getCountry()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontró una ubicación de US")));
+                .orElseThrow(() -> new RuntimeException("No se encontró una ubicación de " + country)));
 	}
 
 }

@@ -12,17 +12,13 @@ import com.weather.domain.model.Weather;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @ApplicationScoped
 public class WeatherService implements GetWeatherUseCase, SearchCityUseCase, SearchCityWithCountryUseCase{
 
 	private final WeatherApiPort api;
-	
-	@Inject
-	public WeatherService(WeatherApiPort api) {
-		this.api = api;
-	}
-
 
 	@Override
 	public Uni<Weather> getWeather(String query) {

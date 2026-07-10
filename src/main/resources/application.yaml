@@ -6,4 +6,4 @@ quarkus:
 
 openweather:
   api:
-    key: YOUR_KEY
+    key: ${OPENWEATHER_API_KEY}

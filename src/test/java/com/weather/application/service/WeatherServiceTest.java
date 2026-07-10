@@ -8,7 +8,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.weather.application.ports.out.WeatherApiPort;
 import com.weather.domain.model.GeoLocation;
@@ -16,16 +20,14 @@ import com.weather.domain.model.Weather;
 
 import io.smallrye.mutiny.Uni;
 
+@ExtendWith(MockitoExtension.class)
 class WeatherServiceTest {
 
+	@Mock
     private WeatherApiPort api;
-    private WeatherService service;
 
-    @BeforeEach
-    void setUp() {
-        api = Mockito.mock(WeatherApiPort.class);
-        service = new WeatherService(api);
-    }
+    @InjectMocks
+    private WeatherService service;
 
     @Test
     void shouldGetWeather() {
