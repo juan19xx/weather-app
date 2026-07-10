@@ -5,8 +5,10 @@ import java.util.List;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 
+import io.smallrye.mutiny.Uni;
+
 public interface WeatherApiPort {
-	Weather getWeather(String query);
-	List<GeoLocation> searchCity(String query);
-	GeoLocation searchCity(String query, String country);
+	Uni<Weather> getWeather(String query);
+	Uni<List<GeoLocation>> searchCity(String query);
+	Uni<GeoLocation> searchCity(String query, String country);
 }

@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.weather.domain.model.GeoLocation;
 
+import io.smallrye.mutiny.Uni;
+
 public interface SearchCityUseCase {
-	List<GeoLocation> searchCity(String query);
-	GeoLocation searchCity(String query, String country);
+	Uni<List<GeoLocation>> searchCity(String query);
+	Uni<GeoLocation> searchCity(String query, String country);
 }

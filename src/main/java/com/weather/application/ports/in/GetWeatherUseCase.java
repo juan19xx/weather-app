@@ -2,6 +2,8 @@ package com.weather.application.ports.in;
 
 import com.weather.domain.model.Weather;
 
+import io.smallrye.mutiny.Uni;
+
 public interface GetWeatherUseCase {
-	Weather getWeather(String query);
+	Uni<Weather> getWeather(String query);
 }

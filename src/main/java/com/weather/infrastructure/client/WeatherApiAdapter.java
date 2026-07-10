@@ -14,6 +14,7 @@ import com.weather.infrastructure.mapper.GeoLocationMapper;
 import com.weather.infrastructure.mapper.WeatherMapper;
 import com.weather.infrastructure.rest.WeatherRestClient;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -34,29 +35,27 @@ public class WeatherApiAdapter implements WeatherApiPort{
 	String apiKey;
 	
 	@Override
-	public Weather getWeather(String query) {
+	public Uni<Weather> getWeather(String query) {
 		// TODO Auto-generated method stub
-		WeatherResponse response = client.getWeather(query, apiKey);
-		return weatherMapper.toDomain(response);
+		return client.getWeather(query, apiKey)
+	            .map(weatherMapper::toDomain);
 	}
 
 	@Override
-	public List<GeoLocation> searchCity(String query) {
+	public Uni<List<GeoLocation>> searchCity(String query) {
 		// TODO Auto-generated method stub
-		List<GeoLocationResponse> response =
-	            client.searchCity(query, 5, apiKey);
-
-	    return geoLocationMapper.toDomain(response);
+		return client.searchCity(query, 5, apiKey)
+				.map(geoLocationMapper::toDomain);
 	}
 
 	@Override
-	public GeoLocation searchCity(String query, String country) {
+	public Uni<GeoLocation> searchCity(String query, String country) {
 		// TODO Auto-generated method stub
-		List<GeoLocation> cities = searchCity(query);
-		return cities.stream()
-		        .filter(g -> g.getCountry().equals(country))
-		        .findFirst()
-		        .orElse(null);
+		Uni<List<GeoLocation>> cities = searchCity(query);
+		return cities.map(locations -> locations.stream()
+                .filter(g -> country.equals(g.getCountry()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontró una ubicación de US")));
 	}
 
 }

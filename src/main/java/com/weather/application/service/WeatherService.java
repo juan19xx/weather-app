@@ -8,6 +8,7 @@ import com.weather.application.ports.out.WeatherApiPort;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -23,21 +24,21 @@ public class WeatherService implements GetWeatherUseCase, SearchCityUseCase{
 
 
 	@Override
-	public Weather getWeather(String query) {
+	public Uni<Weather> getWeather(String query) {
 		// TODO Auto-generated method stub
 		return api.getWeather(query);
 	}
 
 
 	@Override
-	public List<GeoLocation> searchCity(String query) {
+	public Uni<List<GeoLocation>> searchCity(String query) {
 		// TODO Auto-generated method stub
 		return api.searchCity(query);
 	}
 
 
 	@Override
-	public GeoLocation searchCity(String query, String country) {
+	public Uni<GeoLocation> searchCity(String query, String country) {
 		// TODO Auto-generated method stub
 		return api.searchCity(query, country);
 	}
