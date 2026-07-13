@@ -6,7 +6,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import com.weather.application.ports.out.WeatherApiPort;
-import com.weather.domain.exceptions.CityNotFoundException;
+import com.weather.domain.exceptions.NotFoundException;
+import com.weather.domain.exceptions.ServerErrorException;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 import com.weather.infrastructure.dto.GeoLocationResponse;
@@ -18,6 +19,7 @@ import com.weather.infrastructure.rest.WeatherRestClient;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
 
 @ApplicationScoped
 public class WeatherApiAdapter implements WeatherApiPort{
@@ -44,6 +46,17 @@ public class WeatherApiAdapter implements WeatherApiPort{
 	public Uni<Weather> getWeather(String query) {
 		// TODO Auto-generated method stub
 		return client.getWeather(query, apiKey)
+				.onFailure(WebApplicationException.class)
+		        .transform(t -> {
+		        	WebApplicationException ex = (WebApplicationException) t;
+		            if (ex.getResponse().getStatus() == 404) {
+		                return new NotFoundException("This city is not found: "+ query);
+		            } else if(ex.getResponse().getStatus() == 500) {
+		            	return new ServerErrorException("Internal Server error: " + ex.getMessage());
+		            }
+
+		            return ex;
+		        })
 	            .map(weatherMapper::toDomain);
 	}
 
@@ -51,6 +64,14 @@ public class WeatherApiAdapter implements WeatherApiPort{
 	public Uni<List<GeoLocation>> searchCity(String query) {
 		// TODO Auto-generated method stub
 		return client.searchCity(query, MAX_NUMBER_OF_GEOLOCATION_API_RESULTS, apiKey)
+				.onFailure(WebApplicationException.class)
+				.transform(t -> {
+		        	WebApplicationException ex = (WebApplicationException) t;
+		            if(ex.getResponse().getStatus() == 500) {
+		            	return new ServerErrorException("Internal Server error: " + ex.getMessage());
+		            }
+		            return ex;
+		        })
 				.map(geoLocationMapper::toDomain);
 	}
 
@@ -61,7 +82,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 		return cities.map(locations -> locations.stream()
                 .filter(g -> country.equals(g.getCountry()))
                 .findFirst()
-                .orElseThrow(() -> new CityNotFoundException(query, country)));
+                .orElseThrow(() -> new NotFoundException("City: " + query + " with country: " + country + " not found")));
 	}
 
 }
