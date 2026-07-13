@@ -6,6 +6,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import com.weather.application.ports.out.WeatherApiPort;
+import com.weather.domain.exceptions.CityNotFoundException;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 import com.weather.infrastructure.dto.GeoLocationResponse;
@@ -60,7 +61,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 		return cities.map(locations -> locations.stream()
                 .filter(g -> country.equals(g.getCountry()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontró una ubicación de " + country)));
+                .orElseThrow(() -> new CityNotFoundException(query, country)));
 	}
 
 }
