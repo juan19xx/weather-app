@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.weather.domain.exceptions.NotFoundException;
-import com.weather.domain.exceptions.ServerErrorException;
+import com.weather.domain.exceptions.WeatherProviderUnavailableException;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 import com.weather.infrastructure.dto.GeoLocationResponse;
@@ -108,7 +108,7 @@ class WeatherApiAdapterTest {
 
         subscriber
                 .awaitFailure()
-                .assertFailedWith(ServerErrorException.class);
+                .assertFailedWith(WeatherProviderUnavailableException.class);
     }
 
     @Test
@@ -150,7 +150,7 @@ class WeatherApiAdapterTest {
 
         subscriber
                 .awaitFailure()
-                .assertFailedWith(ServerErrorException.class);
+                .assertFailedWith(WeatherProviderUnavailableException.class);
     }
 
     @Test

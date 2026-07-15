@@ -7,7 +7,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import com.weather.application.ports.out.WeatherApiPort;
 import com.weather.domain.exceptions.NotFoundException;
-import com.weather.domain.exceptions.ServerErrorException;
+import com.weather.domain.exceptions.WeatherProviderUnavailableException;
 import com.weather.domain.model.GeoLocation;
 import com.weather.domain.model.Weather;
 import com.weather.infrastructure.dto.GeoLocationResponse;
@@ -52,7 +52,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 		            if (ex.getResponse().getStatus() == 404) {
 		                return new NotFoundException("This city is not found: "+ query);
 		            } else if(ex.getResponse().getStatus() == 500) {
-		            	return new ServerErrorException("Internal Server error: " + ex.getMessage());
+		            	return new WeatherProviderUnavailableException("Internal Server error: " + ex.getMessage());
 		            }
 
 		            return ex;
@@ -68,7 +68,7 @@ public class WeatherApiAdapter implements WeatherApiPort{
 				.transform(t -> {
 		        	WebApplicationException ex = (WebApplicationException) t;
 		            if(ex.getResponse().getStatus() == 500) {
-		            	return new ServerErrorException("Internal Server error: " + ex.getMessage());
+		            	return new WeatherProviderUnavailableException("Internal Server error: " + ex.getMessage());
 		            }
 		            return ex;
 		        })
