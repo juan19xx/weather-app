@@ -54,7 +54,7 @@ class WeatherApiAdapterTest {
     @Test
     void shouldReturnWeather() {
 
-        WeatherResponse response = mock(WeatherResponse.class);
+        WeatherResponse response = new WeatherResponse("stations", 10000, 1784304640, -21600, 3995465, "Monterrey", 200);
         Weather weather = mock(Weather.class);
 
         when(client.getWeather("Monterrey", "api-key"))
@@ -113,8 +113,8 @@ class WeatherApiAdapterTest {
 
     @Test
     void shouldReturnCities() {
-
-        List<GeoLocationResponse> responses = List.of(mock(GeoLocationResponse.class));
+    	GeoLocationResponse response = new GeoLocationResponse("Monterrey", 25.6802019, -100.315258, "MX", "Nuevo León");
+        List<GeoLocationResponse> responses = List.of(response);
         List<GeoLocation> cities = List.of(mock(GeoLocation.class));
 
         when(client.searchCity(anyString(), anyInt(), anyString()))
